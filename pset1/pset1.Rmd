@@ -1,0 +1,56 @@
+---
+title: "Problem Set 1"
+author: "Marc Ishak"
+output:
+  html_notebook:
+    toc: yes
+    toc_float: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = "~/Uni/2019T3/econ3203")
+
+```
+
+
+First: setting files and working directory
+```{r}
+library(readr)
+library(ggplot2)
+library(tidyr)
+library(dplyr)
+```
+
+# Question 1
+
+Creating summaries and plot:
+
+```{r}
+df <- read_csv("data/pset1/anscombe.csv")
+
+summary(df)
+
+l1 <- lm(y1~x123, data = df)
+l2 <- lm(y2~x123, data = df)
+l3 <- lm(y3~x123, data = df)
+
+summary(l1)
+summary(l2)
+summary(l3)
+```
+
+
+
+```{r}
+df %>% 
+  gather("xversion", "xval", x123, x4) %>% 
+  gather("yversion", "yval", -xversion, -xval) %>% 
+  filter((xversion == "x123" & yversion %in% c("y1", "y2", "y3")) 
+         | (xversion == "x4" & yversion == "y4")) %>% 
+  ggplot(aes(xval, yval)) +
+  geom_point() + 
+  geom_smooth(method = "lm", se = F, color = "red") + 
+  facet_wrap(~yversion) +
+  labs(title = "Anscombe's quartet", y = "y value", x = "x value")
+```
