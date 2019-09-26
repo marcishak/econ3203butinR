@@ -20,6 +20,7 @@ library(readr)
 library(ggplot2)
 library(tidyr)
 library(dplyr)
+library(gvlma)
 ```
 
 # Question 1
@@ -34,10 +35,18 @@ summary(df)
 l1 <- lm(y1~x123, data = df)
 l2 <- lm(y2~x123, data = df)
 l3 <- lm(y3~x123, data = df)
+l4 <- lm(y4 ~ x4, data = df)
 
-summary(l1)
-summary(l2)
-summary(l3)
+summary(gvlma(l1))
+summary(gvlma(l2))
+summary(gvlma(l3))
+summary(gvlma(l3))
+
+par(mfrow=c(2,2))
+plot(l1)
+plot(l2)
+plot(l3)
+plot(l4)
 ```
 
 
@@ -54,3 +63,51 @@ df %>%
   facet_wrap(~yversion) +
   labs(title = "Anscombe's quartet", y = "y value", x = "x value")
 ```
+
+
+[This is pretty popular lmao](https://en.wikipedia.org/wiki/Anscombe%27s_quartet)
+
+# Question 2
+## a
+```{r}
+play <- read_tsv("data/pset1/playbill.csv")
+
+ggplot(play, aes(lastweek, currentweek)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = 0.95)
+
+q2l1 <- lm(currentweek ~ lastweek, data = play)
+summary(q2l1)
+confint(q2l1, level = 0.95)
+
+```
+
+
+
+
+yes as 1 is between 0.95 and 1.01
+
+## b
+
+
+## c
+
+```{r}
+predict(q2l1, data.frame(lastweek = 400000), interval = "prediction")
+```
+
+No as $450,000 is not within the regression interval
+
+
+## d
+
+```{r}
+summary(q2l1)
+```
+
+Yes, as the slope is fairly close to 1.
+
+
+# Qustion 3
+
+# a
