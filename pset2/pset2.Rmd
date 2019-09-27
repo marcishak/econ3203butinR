@@ -75,7 +75,7 @@ Running a manual t test (testing the slope)
 ```{r}
 t_val <- tidy(regmod)$statistic[2]
 dfree = dim(df)[1] - 2
-(1 - pt(q =  t_val, df = dfree))*2
+print((1 - pt(q =  t_val, df = dfree))*2)
 ```
 
 Alternatively you could just read it off the summary
