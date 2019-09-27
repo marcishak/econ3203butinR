@@ -11,4 +11,4 @@ All the files are R Notebooks so you can download the Rmd file on the top right.
 
 
 * [Problem Set 1](pset1/)
-* [Problem Set 2](pset1/)
+* [Problem Set 2](pset2/)
