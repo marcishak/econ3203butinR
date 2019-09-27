@@ -14,7 +14,7 @@ knitr::opts_knit$set(root.dir = "~/Uni/2019T3/econ3203")
 ```
 
 # Question 1
-First, let's load our prefered packages and load the data into R
+First, let's load our preferred packages and load the data into R
 ```{r}
 library(readr)
 library(ggplot2)
@@ -41,7 +41,6 @@ Hence the regression formula is static = `r regmod$coefficients[1]` + dynamic * 
 ## b 
 
 ```{r, fig.width=8, fig.asp=1.5}
-dev.new()
 par(mfrow = c(3,2))
 plot(regmod, which = 1:6)
 ```
@@ -51,8 +50,8 @@ gvlma(regmod)
 tidy(regmod, conf.int = T) %>% 
   ggplot(aes(term, estimate, color = term)) +
     geom_point() +
-    geom_errorbar(aes(ymin = conf.low, ymax = conf.high)) +
-    geom_hline(yintercept = 0)
+    geom_hline(yintercept = 0) +
+    geom_errorbar(aes(ymin = conf.low, ymax = conf.high)) 
 
 ```
 
@@ -60,12 +59,10 @@ tidy(regmod, conf.int = T) %>%
 ##  c
 
 ```{r}
-augment(regmod) %>% 
-  # mutate(group = ifelse(.cooksd > 1, "A", "B")) %>%
-  ggplot(aes(dynamic, static)) +
+augment(regmod) %>%
+  ggplot(aes(dynamic, static)) + 
     geom_point(aes(col = .cooksd)) +
     geom_smooth(method = "lm", se = 0.95) +
-    # scale_color_manual(values = c("B" = "#000000", "A" = "#ff0000"), labels = c("B" = "", "A" ="Outlier")) +
     labs(col = "Cooks Distance")
 ```
 
@@ -73,7 +70,17 @@ Yes, as there's a point with a [cooks distance](https://en.wikipedia.org/wiki/Co
 
 
 ## d
+Running a manual t test (testing the slope)
 
 ```{r}
-
+t_val <- tidy(regmod)$statistic[2]
+dfree = dim(df)[1] - 2
+(1 - pt(q =  t_val, df = dfree))*2
 ```
+
+Alternatively you could just read it off the summary
+```{r}
+regmod_sum
+```
+
+Either case the probability that the slope = 0 (and hence the dynamic weight would be useless in predicting the static weight) is  `r tidy(regmod)$p.value[2]` which is smaller than 0.05. Hence we reject the null hypothesis and conclude that the dynamic weight is useful in predicting the static weight.
