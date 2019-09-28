@@ -73,14 +73,14 @@ Yes, as there's a point with a [cooks distance](https://en.wikipedia.org/wiki/Co
 Running a manual t test (testing the slope)
 
 ```{r}
-t_val <- tidy(regmod)$statistic[2]
+t_val <- tidy(regmod)$statistic[2] # calculating it manually with tidy(regmod)$estimate[2]/tidy(regmod)$std.error[2]
 dfree = dim(df)[1] - 2
 print((1 - pt(q =  t_val, df = dfree))*2)
 ```
 
-Alternatively you could just read it off the summary
+Alternatively you could just read it off the summary/get it from the 
 ```{r}
-regmod_sum
+tidy(regmod_sum)$p.value[2]
 ```
 
 Either case the probability that the slope = 0 (and hence the dynamic weight would be useless in predicting the static weight) is  `r tidy(regmod)$p.value[2]` which is smaller than 0.05. Hence we reject the null hypothesis and conclude that the dynamic weight is useful in predicting the static weight.
