@@ -64,23 +64,25 @@ augment(regmod) %>%
     geom_point(aes(col = .cooksd)) +
     geom_smooth(method = "lm", se = 0.95) +
     labs(col = "Cooks Distance")
+
 ```
 
-Yes, as there's a point with a [cooks distance](https://en.wikipedia.org/wiki/Cook%27s_distance)  >  1.
+Yes, as there's `r (augment(regmod) %>%  filter(.cooksd > qf(0.5,2,28)) %>% dim())[1]` point with a [cooks distance](https://en.wikipedia.org/wiki/Cook%27s_distance)  >  `r qf(0.5,2,28)`.
 
 
 ## d
 Running a manual t test (testing the slope)
 
 ```{r}
-t_val <- tidy(regmod)$statistic[2] # calculating it manually with tidy(regmod)$estimate[2]/tidy(regmod)$std.error[2]
+t_val <- tidy(regmod)$statistic[2] 
+# calculating it manually with tidy(regmod)$estimate[2]/tidy(regmod)$std.error[2] also works
 dfree = dim(df)[1] - 2
 print((1 - pt(q =  t_val, df = dfree))*2)
 ```
 
-Alternatively you could just read it off the summary/get it from the 
+Alternatively you could just read it off the summary/get it from the tided model
 ```{r}
-tidy(regmod_sum)$p.value[2]
+tidy(regmod_sum)$p.value[2] #rounding diffrence smh
 ```
 
 Either case the probability that the slope = 0 (and hence the dynamic weight would be useless in predicting the static weight) is  `r tidy(regmod)$p.value[2]` which is smaller than 0.05. Hence we reject the null hypothesis and conclude that the dynamic weight is useful in predicting the static weight.
