@@ -86,3 +86,54 @@ tidy(regmod_sum)$p.value[2] #rounding diffrence smh
 ```
 
 Either case the probability that the slope = 0 (and hence the dynamic weight would be useless in predicting the static weight) is  `r tidy(regmod)$p.value[2]` which is smaller than 0.05. Hence we reject the null hypothesis and conclude that the dynamic weight is useful in predicting the static weight.
+
+Calculating for the second graph (to match stata anaylisis)
+
+```{r}
+
+df2 <- augment(regmod) %>%
+  filter(.cooksd < 1) %>% 
+  semi_join(df, .)
+
+regmod2 <- lm(static ~ dynamic, data = df2)
+regmod_sum2 <- summary(regmod2)
+
+regmod_sum
+```
+
+```{r, fig.width=8, fig.asp=1.5}
+par(mfrow = c(3,2))
+plot(regmod2, which = 1:6)
+```
+```{r}
+gvlma(regmod2)
+
+tidy(regmod2, conf.int = T) %>% 
+  ggplot(aes(term, estimate, color = term)) +
+    geom_point() +
+    geom_hline(yintercept = 0) +
+    geom_errorbar(aes(ymin = conf.low, ymax = conf.high)) 
+
+```
+
+```{r}
+augment(regmod2) %>%
+  ggplot(aes(dynamic, static)) + 
+    geom_point(aes(col = .cooksd)) +
+    geom_smooth(method = "lm", se = 0.95) +
+    labs(col = "Cooks Distance")
+
+```
+
+
+```{r}
+t_val <- tidy(regmod2)$statistic[2] 
+# calculating it manually with tidy(regmod)$estimate[2]/tidy(regmod)$std.error[2] also works
+dfree = nrow(df2) - 2
+print((1 - pt(q =  t_val, df = dfree))*2)
+```
+
+Alternatively you could just read it off the summary/get it from the tided model
+```{r}
+tidy(regmod_sum2)$p.value[2] #rounding diffrence smh
+```
