@@ -87,7 +87,11 @@ tidy(regmod_sum)$p.value[2] #rounding diffrence smh
 
 Either case the probability that the slope = 0 (and hence the dynamic weight would be useless in predicting the static weight) is  `r tidy(regmod)$p.value[2]` which is smaller than 0.05. Hence we reject the null hypothesis and conclude that the dynamic weight is useful in predicting the static weight.
 
-Calculating for the second graph (to match stata anaylisis)
+## Graph selections for data without outlier
+
+We can clearly see that there exists an outlier in the original graph (cooks distance!!!). So here are the same calcs without the outlier. (This also is supposed to match more closely with my submitted stata version)
+
+Calculating for the second graph (to match stata analysis)
 
 ```{r}
 
