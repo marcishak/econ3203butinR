@@ -65,6 +65,10 @@ augment(regmod) %>%
     geom_smooth(method = "lm", se = 0.95) +
     labs(col = "Cooks Distance")
 
+paste0("Number of Outliers: ", (augment(regmod) %>% 
+  filter(.cooksd > qf(0.5,2,28)) %>% 
+  nrow()))
+
 ```
 
 Yes, as there's `r (augment(regmod) %>%  filter(.cooksd > qf(0.5,2,28)) %>% dim())[1]` point with a [cooks distance](https://en.wikipedia.org/wiki/Cook%27s_distance)  >  `r qf(0.5,2,28)`.
@@ -127,7 +131,15 @@ augment(regmod2) %>%
     geom_smooth(method = "lm", se = 0.95) +
     labs(col = "Cooks Distance")
 
+# Outlier count:
+
+paste0("Number of Outliers: ", (augment(regmod2) %>% 
+  filter(.cooksd > qf(0.5,2,27)) %>% 
+  nrow()))
+
+
 ```
+
 
 
 ```{r}
