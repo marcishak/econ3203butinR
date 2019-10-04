@@ -159,7 +159,6 @@ tidy(regmod_sum2)$p.value[2] #rounding diffrence smh
 
 The formula for a confidance interal is:
 \[
-
 \hat{x} \pm  z_{1-\alpha/2}\frac{s}{\sqrt{n}}
 \]
 
