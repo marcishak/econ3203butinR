@@ -21,6 +21,7 @@ library(ggplot2)
 library(dplyr)
 library(gvlma)
 library(broom)
+library(gridExtra)
 
 df <- read_csv("data/pset2/dynamic.csv")  
 
@@ -153,3 +154,33 @@ Alternatively you could just read it off the summary/get it from the tided model
 ```{r}
 tidy(regmod_sum2)$p.value[2] #rounding diffrence smh
 ```
+
+# Question 2
+
+The formula for a confidance interal is:
+\[
+
+\hat{x} \pm  z_{1-\alpha/2}\frac{s}{\sqrt{n}}
+\]
+
+Hence as the size of n gets larger the "band" of the confidance interval shrinks. A confidance interval is used to provide a predicion of the population parameter (like the mean) and not the entire data set (like a prediction interval). You can see it in the graphs below:
+
+```{r}
+
+
+plots = list()
+i = 1
+for(n in c(10,50,100,200)){
+  points = data.frame(x = numeric(n), y = numeric(n))
+  points$x <- seq(1,10000, 10000/n)
+  points$y <- sapply(points$x, function(q){q + rnorm(mean = 0, sd = 1000, n = 1)})
+  plots[[i]] <- (ggplot(points,aes(x,y)) + geom_point(alpha = 0.3) + geom_smooth(method = "lm", se = 0.95, col = "red", fill = "blue"))
+  i = i+1
+}
+
+v <- length(plots)
+nCol <- floor(sqrt(v))
+do.call("grid.arrange", c(plots, ncol=nCol))
+
+```
+
