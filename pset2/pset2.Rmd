@@ -107,7 +107,7 @@ df2 <- augment(regmod) %>%
 regmod2 <- lm(static ~ dynamic, data = df2)
 regmod_sum2 <- summary(regmod2)
 
-regmod_sum
+regmod_sum2
 ```
 
 ```{r, fig.width=8, fig.asp=1.5}
