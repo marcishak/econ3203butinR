@@ -162,7 +162,7 @@ The formula for a confidance interal is:
 \hat{x} \pm  z_{1-\alpha/2}\frac{s}{\sqrt{n}}
 \]
 
-Hence as the size of n gets larger the "band" of the confidance interval shrinks. A confidance interval is used to provide a predicion of the population parameter (like the mean) and not the entire data set (like a prediction interval). You can see it in the graphs below:
+Hence as the size of \(n\) gets larger the "band" of the confidance interval shrinks. A confidance interval is used to provide a predicion of the population parameter (like the mean) and not the entire data set (like a prediction interval). You can see it in the graphs below, which estimate the expected value (mean) of \(y\) given \(x\) (ie: \(E(y|x)\):
 
 ```{r}
 
