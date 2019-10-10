@@ -42,6 +42,8 @@ Hence the regression formula is static = `r regmod$coefficients[1]` + dynamic * 
 ## b 
 
 ```{r, fig.width=8, fig.asp=1.5}
+## note for next time -> use ggfortify for ggplot regression diagnostics
+
 par(mfrow = c(3,2))
 plot(regmod, which = 1:6)
 ```
@@ -162,14 +164,14 @@ The formula for a confidance interal is:
 \hat{x} \pm  z_{1-\alpha/2}\frac{s}{\sqrt{n}}
 \]
 
-Hence as the size of \(n\) gets larger the "band" of the confidance interval shrinks. A confidance interval is used to provide a predicion of the population parameter (like the mean) and not the entire data set (like a prediction interval). You can see it in the graphs below, which estimate the expected value (mean) of \(y\) given \(x\) (ie: \(E(y|x)\)):
+Hence as the size of \(n\) gets larger the "band" of the confidance interval shrinks. A confidance interval is used to provide a predicion of the population parameter (like the mean) and not the entire data set (like a prediction interval). You can see it in the graphs below, which estimate the expected value (mean) of \(y\) given \(x\) witha 95% confidance interval (ie: \(E(y|x)\)):
 
 ```{r}
 
 plots <- lapply(c(10,50,100,200), function(n){
   points = data.frame(x = numeric(n), y = numeric(n))
   points$x <- seq(1,10000, 10000/n)
-  points$y <- sapply(points$x, function(q){q + rnorm(mean = 0, sd = 1000, n = 1)})
+  points$y <- sapply(points$x, function(q){q + rnorm(mean = 0, sd = 500, n = 1)})
   ggplot(points,aes(x,y)) + geom_point(alpha = 0.3) + geom_smooth(method = "lm", se = 0.95, col = "red", fill = "blue")
 })
 
