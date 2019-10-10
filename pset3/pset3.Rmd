@@ -98,7 +98,7 @@ autoplot(reg2, which = 1:6)
 
 ```
 
-Unfortunatly, the data is still skewed. 
+Unfortunately, the data is still skewed. 
 
 
 ```{r}
