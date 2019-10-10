@@ -1,0 +1,107 @@
+---
+title: "Lab3"
+author: "Marc Ishak"
+date: "10 October 2019"
+output: 
+  html_notebook:
+    toc: true
+    toc_float: true
+    fig_caption: no
+    toc_depth: 3
+  
+---
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = "~/Uni/2019T3/econ3203")
+
+```
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(ggplot2)
+library(dplyr)
+library(gvlma) # this package allows us to check regression assumptions :)
+library(readr)
+library(ggfortify)
+library(broom)
+
+```
+
+
+
+# Question 1
+
+## a
+
+```{r}
+
+df <- read_tsv("data/pset3/bonds.csv")
+```
+
+
+Plotting with regression
+
+```{r}
+augment(lm(bidprice ~ couponrate, data = df)) %>% 
+  ggplot(aes(couponrate, bidprice, col = .cooksd)) +
+  geom_point() +
+  geom_smooth(col = 'red', method = 'lm', se = F)
+
+```
+Clearly an outlier exist at the tail of the coupon rate, let's remove it.
+
+```{r}
+df_rm_out<- augment(lm(bidprice ~ couponrate, data = df)) %>% 
+  filter(.cooksd < 1) %>%  
+  semi_join(df, .)
+augment(lm(bidprice ~ couponrate, data = df_rm_out)) %>% 
+  ggplot(aes(couponrate, bidprice, col = .cooksd)) +
+    geom_point() +
+    geom_smooth(col = 'red', method = 'lm', se = F)
+
+```
+
+
+Plotting diagnostics
+
+```{r, fig.width=8, fig.asp=1.5}
+reg <- lm(bidprice ~ couponrate, data = df_rm_out)
+
+summary(reg)
+
+autoplot(reg, which = 1:6)
+
+```
+
+Clearly, there are two more points that distort the model. Let's remove them.
+
+```{r}
+df_rm_out2<- augment(lm(bidprice ~ couponrate, data = df_rm_out)) %>% 
+  filter(.cooksd < 1) %>%  
+  semi_join(df, .)
+augment(lm(bidprice ~ couponrate, data = df_rm_out2)) %>% 
+  ggplot(aes(couponrate, bidprice, col = .cooksd)) +
+    geom_point() +
+    geom_smooth(col = 'red', method = 'lm', se = F)
+
+```
+
+
+Plotting diagnostics for the new model
+
+```{r, fig.width=8, fig.asp=1.5}
+reg2 <- lm(bidprice ~ couponrate, data = df_rm_out2)
+
+summary(reg2)
+
+autoplot(reg2, which = 1:6)
+
+```
+
+Unfortunatly, the data is still skewed. 
+
+
+```{r}
+
+summary(gvlma(reg2))
+```
