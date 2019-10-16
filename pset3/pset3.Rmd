@@ -1,7 +1,6 @@
 ---
-title: "Lab3"
+title: "Problem Set 3"
 author: "Marc Ishak"
-date: "10 October 2019"
 output: 
   html_notebook:
     toc: true
@@ -48,7 +47,7 @@ augment(lm(bidprice ~ couponrate, data = df)) %>%
   geom_smooth(col = 'red', method = 'lm', se = F)
 
 ```
-Clearly an outlier exist at the tail of the coupon rate, let's remove it.
+Clearly an outlier exists at the tail of the coupon rate, let's remove it.
 
 ```{r}
 df_rm_out<- augment(lm(bidprice ~ couponrate, data = df)) %>% 
