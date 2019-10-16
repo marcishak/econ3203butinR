@@ -1,0 +1,112 @@
+---
+title: "Problem Set 4"
+author: "Marc Ishak"
+output:
+  html_notebook:
+    toc: yes
+    toc_float: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = "~/Uni/2019T3/econ3203")
+
+```
+
+
+
+# Question 1
+## a
+
+```{r}
+library(ggplot2)
+library(dplyr)
+
+# set.seed(80085) # for reproducibility 
+
+df <-  data.frame(w = rnorm(1000))
+
+# w <- sapply(x, function(q){pnorm(q)})
+
+df <- df %>% 
+  arrange(w) %>% 
+  mutate(x = pnorm(w))
+```
+
+
+## b 
+
+
+```{r}
+ggplot(df,aes(x)) +
+  geom_histogram(aes(y = ..density..), bins = nclass.Sturges(df$x))
+
+
+```
+
+
+## c
+
+A continous uniform distribution has the probabilty density function 
+
+\[
+f(x) \left\{ \begin{array}{l}
+\frac{1}{b-a} \quad a \leq x \leq b \\
+0 \quad \quad \text{otherwise}
+\end{array}
+\right.
+\]
+
+Therefore over the interval \([0,1]\) we get:
+\[
+f(t) = \frac{1}{1-0} = 1
+\]
+
+Hence if we integrate to get the cumulative distribution function (for any given \(t\) on the interval)
+\[
+F(t) = \int 1  =  t \quad \text{for} \quad 0\leq t \leq 1
+\]
+
+Now, the main property of the cumulative distribution function is that \(F(x) = Pr(X \leq x)\), thus
+\[
+F(t)  =  t = Pr(Y \leq t) \quad \text{for} \quad 0\leq t \leq 1
+\]
+ 
+
+## d
+
+
+
+## e 
+
+```{r}
+n = nrow(df)
+df <- df %>% 
+  arrange(x) %>% 
+  mutate(xi = (row_number()+0.5)/(n+1))
+
+ggplot(df, aes(xi, x))+
+  geom_point()
+
+# summary(lm(xi ~ x, data = df))
+
+cor(df$xi, df$x)
+```
+
+
+## f
+
+```{r}
+correlation_definer <- function(q){
+  df <-  data.frame(w = sort(rnorm(1000))) %>% 
+  arrange(w) %>% 
+  mutate(x = pnorm(w), xi = (row_number()+0.5)/(q+1))
+  cor(df$x, df$xi)
+}
+
+cor_list <- sapply(1:100, correlation_definer)
+ggplot() +
+  geom_histogram(aes(cor_list, y = ..density..), bins = 10)
+
+
+```
